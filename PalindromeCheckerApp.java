@@ -1,29 +1,28 @@
+import java.util.Stack; // Import the Stack class
+
 public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
+        String input = "level";
+        Stack<Character> stack = new Stack<>();
 
-        String input = "deified";
-        char[] charArray = input.toCharArray();
-        boolean isPalindrome = true;
-        int left = 0;
-        int right = charArray.length - 1;
+        for (int i = 0; i < input.length(); i++) {
+            stack.push(input.charAt(i));
+        }
 
-
-        while (left < right) {
-            if (charArray[left] != charArray[right]) {
-                isPalindrome = false;
-                break;
-            }
-            left++;
-            right--;
+        String reversed = "";
+        while (!stack.isEmpty()) {
+            reversed += stack.pop();
         }
 
         System.out.println("Input String: " + input);
-        if (isPalindrome) {
-            System.out.println("Result: It is a Palindrome (Array Check).");
+        System.out.println("Reversed from Stack: " + reversed);
+
+        if (input.equals(reversed)) {
+            System.out.println("Result: It is a Palindrome (Stack Check).");
         } else {
-            System.out.println("Result: It is NOT a Palindrome (Array Check).");
+            System.out.println("Result: It is NOT a Palindrome (Stack Check).");
         }
 
     }
