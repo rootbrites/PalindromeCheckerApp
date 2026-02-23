@@ -1,35 +1,52 @@
-import java.util.Deque;
-import java.util.ArrayDeque;
+class Node {
+    char data;
+    Node next;
+    Node(char data) { this.data = data; }
+}
 
 public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
-        String input = "racecar";
-        Deque<Character> deque = new ArrayDeque<>();
+        String input = "noon";
+        if (input.length() == 0) return;
 
-        for (int i = 0; i < input.length(); i++) {
-            deque.addLast(input.charAt(i));
+        Node head = new Node(input.charAt(0));
+        Node temp = head;
+        for (int i = 1; i < input.length(); i++) {
+            temp.next = new Node(input.charAt(i));
+            temp = temp.next;
         }
 
+        Node slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        Node prev = null;
+        Node current = slow;
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+
+        Node firstHalf = head;
+        Node secondHalf = prev;
         boolean isPalindrome = true;
 
-        while (deque.size() > 1) {
-            char front = deque.removeFirst();
-            char rear = deque.removeLast();
-
-            if (front != rear) {
+        while (secondHalf != null) {
+            if (firstHalf.data != secondHalf.data) {
                 isPalindrome = false;
                 break;
             }
+            firstHalf = firstHalf.next;
+            secondHalf = secondHalf.next;
         }
 
         System.out.println("Input String: " + input);
-        if (isPalindrome) {
-            System.out.println("Result: It is a Palindrome (Deque Check).");
-        } else {
-            System.out.println("Result: It is NOT a Palindrome.");
-        }
-
+        System.out.println("Result: " + (isPalindrome ? "Is a Palindrome" : "Not a Palindrome") + " (Linked List Check)");
     }
 }
