@@ -4,22 +4,15 @@ import java.util.ArrayDeque;
 
 /**
  * ==========================================================
- * UC12: Strategy Pattern for Palindrome Algorithms
+ * UC13: Palindrome Performance Comparison
  * PalindromeCheckerApp
  * ==========================================================
  */
 
-/* ---------- STRATEGY INTERFACE ---------- */
+public class PalindromeCheckerApp {
 
-interface PalindromeStrategy {
-    boolean checkPalindrome(String input);
-}
-
-/* ---------- STACK STRATEGY ---------- */
-
-class StackStrategy implements PalindromeStrategy {
-
-    public boolean checkPalindrome(String input) {
+    // Stack Algorithm
+    public static boolean stackPalindrome(String input) {
 
         Stack<Character> stack = new Stack<>();
 
@@ -35,18 +28,14 @@ class StackStrategy implements PalindromeStrategy {
 
         return input.equalsIgnoreCase(reversed);
     }
-}
 
-/* ---------- DEQUE STRATEGY ---------- */
-
-class DequeStrategy implements PalindromeStrategy {
-
-    public boolean checkPalindrome(String input) {
+    // Deque Algorithm
+    public static boolean dequePalindrome(String input) {
 
         Deque<Character> deque = new ArrayDeque<>();
 
-        for (int i = 0; i < input.length(); i++) {
-            deque.addLast(input.charAt(i));
+        for (char c : input.toCharArray()) {
+            deque.addLast(c);
         }
 
         while (deque.size() > 1) {
@@ -58,48 +47,59 @@ class DequeStrategy implements PalindromeStrategy {
 
         return true;
     }
-}
 
-/* ---------- PALINDROME CHECKER (CONTEXT) ---------- */
+    // Two Pointer Algorithm
+    public static boolean twoPointerPalindrome(String input) {
 
-class PalindromeChecker {
+        int left = 0;
+        int right = input.length() - 1;
 
-    private PalindromeStrategy strategy;
+        while (left < right) {
 
-    public PalindromeChecker(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+            if (input.charAt(left) != input.charAt(right)) {
+                return false;
+            }
+
+            left++;
+            right--;
+        }
+
+        return true;
     }
-
-    public boolean check(String input) {
-        return strategy.checkPalindrome(input);
-    }
-}
-
-/* ---------- APPLICATION ENTRY ---------- */
-
-public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
-        System.out.println("=================================");
-        System.out.println("Palindrome Checker App - UC12");
-        System.out.println("Strategy Pattern Implementation");
-        System.out.println("=================================");
+        System.out.println("=====================================");
+        System.out.println("Palindrome Checker Performance Test");
+        System.out.println("UC13 - Algorithm Comparison");
+        System.out.println("=====================================");
 
-        String word = "madam";
+        String testWord = "racecar";
 
-        // Using Stack Strategy
-        PalindromeChecker stackChecker =
-                new PalindromeChecker(new StackStrategy());
+        // Stack Test
+        long startStack = System.nanoTime();
+        boolean stackResult = stackPalindrome(testWord);
+        long endStack = System.nanoTime();
 
-        System.out.println("Stack Strategy:");
-        System.out.println(word + " -> " + stackChecker.check(word));
+        // Deque Test
+        long startDeque = System.nanoTime();
+        boolean dequeResult = dequePalindrome(testWord);
+        long endDeque = System.nanoTime();
 
-        // Using Deque Strategy
-        PalindromeChecker dequeChecker =
-                new PalindromeChecker(new DequeStrategy());
+        // Two Pointer Test
+        long startPointer = System.nanoTime();
+        boolean pointerResult = twoPointerPalindrome(testWord);
+        long endPointer = System.nanoTime();
 
-        System.out.println("\nDeque Strategy:");
-        System.out.println(word + " -> " + dequeChecker.check(word));
+        System.out.println("\nResults:");
+
+        System.out.println("Stack Result: " + stackResult +
+                " | Time: " + (endStack - startStack) + " ns");
+
+        System.out.println("Deque Result: " + dequeResult +
+                " | Time: " + (endDeque - startDeque) + " ns");
+
+        System.out.println("Two Pointer Result: " + pointerResult +
+                " | Time: " + (endPointer - startPointer) + " ns");
     }
 }
